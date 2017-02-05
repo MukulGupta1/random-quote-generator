@@ -1,0 +1,100 @@
+
+<html lang="en">
+<head>
+  <title>Random Quote Generator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script>window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+
+    return t;
+    }(document, "script", "twitter-wjs"));
+  </script>
+
+  <script>
+  $(document).ready(function() {
+
+    $("#nextQuoteButton").on("click", function(){
+      //using .getJson
+      // $.getJSON("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en", function(json) {
+      //   $("#quoteText").html(json.quoteText);
+      //   $("#quoteSpeaker").html(json.quoteAuthor);
+      //   $("#nextQuoteButton").prop('disabled',false);
+      // });
+      //using AJAX
+      $.ajax({
+        type: "GET",
+        url: "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en",
+        cache: false,
+        beforeSend: function() {
+
+          //Start showing Loading...
+          $("#loading").html('Loading...');
+
+          $("#nextQuoteButton").prop('disabled',true);
+        },
+        success:function(json){
+          twttr.widgets.load();
+          $("#quoteText").html(json.quoteText);
+          $("#quoteSpeaker").html(json.quoteAuthor);
+          $("#nextQuoteButton").prop('disabled',false);
+
+          //Stop showing Loading...
+          $("#loading").html('');
+
+          //Update tweet content
+          $('#tweetBtn iframe').remove();
+          var tweetBtn = $('<a></a>')
+          .addClass('twitter-share-button')
+          .attr('href', 'http://twitter.com/share')
+          .attr('data-text', json.quoteText + " - " + json.quoteAuthor);
+          $('#tweetBtn').append(tweetBtn);
+          twttr.widgets.load();
+        }
+      });
+    });
+  });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Random quote generator</h2>
+    <div class="panel panel-default center-block" style="width:600px">
+      <div class="panel-body">
+        <div id="quoteText" class="row">
+          I take my children everywhere, but they always find their way back home.
+        </div>
+        <div id="quoteSpeaker" class="row">
+          Robert Orben
+        </div>
+        <div id="nextQuoteButton" class="row">
+          <button class="btn btn-default">Button</button>
+        </div>
+        <div id="tweetBtn">
+          <a href="https://twitter.com/share" class="twitter-share-button" data-text ="sample text" data-show-count="false">Tweet</a>
+        </div>
+        <div id="loading" class="row"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
