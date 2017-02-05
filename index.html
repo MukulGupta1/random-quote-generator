@@ -35,7 +35,8 @@
     $("#nextQuoteButton").on("click", function(){
 
       $.ajax({
-        type: "GET",
+        type: 'GET',
+        crossDomain: true,
         dataType: 'jsonp',
         url: "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en",
         cache: false,
