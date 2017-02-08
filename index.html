@@ -30,47 +30,44 @@
   </script>
 
   <script>
+    function seekQuote(){
+      $(document).ready(function(){
+        console.log("testing123");
+        $.getJSON("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&callback=", function(a) {
+          console.log("testing321");
+          $("#quoteText").html(a[0].content);
+          $("#quoteSpeaker").html(a[0].title);
+          console.log(a);
+        });
+      });
+    }
+  </script>
+
+  <!-- <script>
   $(document).ready(function() {
 
     $("#nextQuoteButton").on("click", function(){
 
       $.ajax({
-        type: 'GET',
-        crossDomain: true,
-        dataType: 'jsonp',
-        url: "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en",
+        type: "GET",
+        dataType: 'json',
+        url: "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1",
         cache: false,
 
         beforeSend: function() {
-          //Start showing Loading...
-          // $('#loading').html('Loading..');
           $('#spinner').addClass('loader');
 
-        //   $("#loading").html('<span class="glyphicon glyphicon-repeat fast-right-spinner" style="-webkit-animation: glyphicon-spin-r 1s infinite linear; animation: glyphicon-spin-r 1s infinite linear"></span>');
         },
 
         success: function(json) {
-          $("#quoteText").html(json.quoteText);
-          $("#quoteSpeaker").html(json.quoteAuthor);
+          $("#quoteText").html(json[0].content);
+          $("#quoteSpeaker").html(json[0].title);
 
-          //Stop showing Loading...
-          // $('#loading').html('');
-          $('#spinner').removeClass('loader');
-
-          //Update tweet content
-          $('#tweetBtn iframe').remove();
-          var tweetBtn = $('<a></a>')
-          .addClass('twitter-share-button')
-          .attr('href', 'http://twitter.com/share')
-          .attr('data-text', json.quoteText + " - " + json.quoteAuthor);
-
-          $('#tweetBtn').append(tweetBtn);
-          twttr.widgets.load();
         }
       });
     });
   });
-  </script>
+  </script> -->
 </head>
 
 <body>
@@ -89,7 +86,7 @@
           <a href="https://twitter.com/share" class="twitter-share-button" data-text ="Things that were hard to bear are sweet to remember. - Seneca" data-show-count="false">Tweet</a>
         </div>
         <div id="nextQuoteButton" class="row" style="margin:0; float:right" >
-          <button class="btn btn-primary">Next Quote</button>
+          <button class="btn btn-primary" onclick="seekQuote()">Next Quote</button>
         </div>
         <div id="spinner" class="row" style="margin:10 0 0 0"></div>
         <!-- <div id=""></div> -->
