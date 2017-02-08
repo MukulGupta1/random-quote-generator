@@ -37,37 +37,12 @@
           console.log("testing321");
           $("#quoteText").html(a[0].content);
           $("#quoteSpeaker").html(a[0].title);
+          cache: false;
           console.log(a);
         });
       });
     }
   </script>
-
-  <!-- <script>
-  $(document).ready(function() {
-
-    $("#nextQuoteButton").on("click", function(){
-
-      $.ajax({
-        type: "GET",
-        dataType: 'json',
-        url: "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1",
-        cache: false,
-
-        beforeSend: function() {
-          $('#spinner').addClass('loader');
-
-        },
-
-        success: function(json) {
-          $("#quoteText").html(json[0].content);
-          $("#quoteSpeaker").html(json[0].title);
-
-        }
-      });
-    });
-  });
-  </script> -->
 </head>
 
 <body>
