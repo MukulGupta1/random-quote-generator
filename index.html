@@ -16,10 +16,12 @@
         js.id = id;
         js.src = "https://platform.twitter.com/widgets.js";
         fjs.parentNode.insertBefore(js, fjs);
+
         t._e = [];
         t.ready = function(f) {
             t._e.push(f);
         };
+
         return t;
     }(document, "script", "twitter-wjs"));
     </script>
@@ -45,14 +47,17 @@
           </div>
         </div>
       </div>
-      <div class = "text-center">Made with help from <a href ="http://forismatic.com/en/">Forismatic API</a></div>
+      <div class = "text-center">Made with help from <a href ="https://quotesondesign.com/">Quotes on Design</a></div>
     </div>
 
     <script type="text/javascript">
       function parseQuote(response)
       {
-          document.getElementById("quoteText").innerHTML = response.quoteText;
-          document.getElementById("quoteSpeaker").innerHTML = response.quoteAuthor;
+          var quote = response[0].content
+          quote = quote.replace('<p>',"");
+          quote = quote.replace('</p>',"");
+          document.getElementById("quoteText").innerHTML = quote;
+          document.getElementById("quoteSpeaker").innerHTML = response[0].title;
 
           //updating the text in the tweet button
           var tweetDiv = document.getElementById("tweetBtn");
@@ -60,7 +65,7 @@
           var twitterA = document.createElement("a");
           twitterA.className = "twitter-share-button"
           twitterA.setAttribute("href", "http://twitter.com/share");
-          twitterA.setAttribute("data-text", response.quoteText + " - " + response.quoteAuthor);
+          twitterA.setAttribute("data-text", quote + "- " + response[0].title);
           tweetDiv.appendChild(twitterA);
           twttr.widgets.load();
           console.log(tweetDiv);
@@ -69,8 +74,8 @@
       function seekQuote(){
           //On Next Tweet button click
           var script = document.createElement('script');
-          var random = Math.floor(Math.random() * 100) + 1
-          script.src = 'http://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&jsonp=parseQuote&lang=en&temp='+random;
+          var random = Math.floor(Math.random() * 1000) + 1
+          script.src = 'https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&_jsonp=parseQuote&temp='+random;
           document.getElementsByTagName('head')[0].appendChild(script);
       }
     </script>
