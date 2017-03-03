@@ -1,73 +1,78 @@
-
 <html lang="en">
-<head>
-  <title>Random Quote Generator</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="spinner.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <head>
+    <title>Random Quote Generator</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        t._e = [];
+        t.ready = function(f) {
+            t._e.push(f);
+        };
+        return t;
+    }(document, "script", "twitter-wjs"));
+    </script>
+  </head>
 
-  <script>window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-    t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
+  <body>
 
-    t._e = [];
-    t.ready = function(f) {
-      t._e.push(f);
-    };
-
-    return t;
-  }(document, "script", "twitter-wjs"));
-  </script>
-
-  <script>
-    function seekQuote(){
-      $(document).ready(function(){
-        console.log("testing123");
-        $.getJSON("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&callback=", function(a) {
-          console.log("testing321");
-          $("#quoteText").html(a[0].content);
-          $("#quoteSpeaker").html(a[0].title);
-          cache: false;
-          console.log(a);
-        });
-      });
-    }
-  </script>
-</head>
-
-<body>
-  <div class="container">
-    <h2 class="text-center">Random quote generator</h2>
-    <div class="panel panel-default center-block" style="width:600px; margin-top:50px">
-      <div class="panel-body">
-
-        <div id="quote-block">
-          <blockquote>
-            <div id ="quoteText"><p>Things that were hard to bear are sweet to remember.</p></div>
-            <footer><div id ="quoteSpeaker">Seneca</div></footer>
-          </blockquote>
+    <div class="container">
+      <h2 class="text-center">Random quote generator</h2>
+      <div class="panel panel-default center-block" style="width:600px; margin-top:50px">
+        <div class="panel-body">
+          <div id="quote-block">
+            <blockquote>
+              <div id ="quoteText">Things that were hard to bear are sweet to remember.</div>
+              <footer><div id ="quoteSpeaker">Seneca</div></footer>
+            </blockquote>
+          </div>
+          <div id = "tweetBtn">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-text ="Things that were hard to bear are sweet to remember. - Seneca" data-show-count="false">Tweet</a>
+          </div>
+          <div id="nextQuoteButton" class="row" style="margin:0; float:right" >
+            <button class="btn btn-primary" onclick="seekQuote()">Next Quote</button>
+          </div>
         </div>
-        <div id="tweetBtn">
-          <a href="https://twitter.com/share" class="twitter-share-button" data-text ="Things that were hard to bear are sweet to remember. - Seneca" data-show-count="false">Tweet</a>
-        </div>
-        <div id="nextQuoteButton" class="row" style="margin:0; float:right" >
-          <button class="btn btn-primary" onclick="seekQuote()">Next Quote</button>
-        </div>
-        <div id="spinner" class="row" style="margin:10 0 0 0"></div>
-        <!-- <div id=""></div> -->
       </div>
+      <div class = "text-center">Made with help from <a href ="http://forismatic.com/en/">Forismatic API</a></div>
     </div>
-  </div>
-</body>
 
+    <script type="text/javascript">
+      function parseQuote(response)
+      {
+          document.getElementById("quoteText").innerHTML = response.quoteText;
+          document.getElementById("quoteSpeaker").innerHTML = response.quoteAuthor;
+
+          //updating the text in the tweet button
+          var tweetDiv = document.getElementById("tweetBtn");
+          tweetDiv.innerHTML = "";
+          var twitterA = document.createElement("a");
+          twitterA.className = "twitter-share-button"
+          twitterA.setAttribute("href", "http://twitter.com/share");
+          twitterA.setAttribute("data-text", response.quoteText + " - " + response.quoteAuthor);
+          tweetDiv.appendChild(twitterA);
+          twttr.widgets.load();
+          console.log(tweetDiv);
+
+      }
+      function seekQuote(){
+          //On Next Tweet button click
+          var script = document.createElement('script');
+          var random = Math.floor(Math.random() * 100) + 1
+          script.src = 'http://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&jsonp=parseQuote&lang=en&temp='+random;
+          document.getElementsByTagName('head')[0].appendChild(script);
+      }
+    </script>
+  </body>
 </html>
